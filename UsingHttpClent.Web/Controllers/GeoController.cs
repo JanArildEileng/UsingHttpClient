@@ -30,44 +30,56 @@ namespace UsingHttpClent.Web.Controllers
             var rng = new Random();
 
             if (Geo == null)
-                Geo = Enumerable.Range(0, 5).Select(index => new Geo
+                Geo = Enumerable.Range(0, 3).Select(index => new Geo
                 {
                     Id = Id++,
-                    LandNavn = LandNavn[index]
-                    //Date = DateTime.Now.AddDays(index),
-                    //TemperatureC = rng.Next(-20, 55),
-                    //Summary = Summaries[rng.Next(Summaries.Length)] 
+                    LandNavn = LandNavn[index],
+                    Created = DateTime.Now,
                 }) 
             .ToList();
         }
 
-        [HttpGet]
-        public IEnumerable<Geo> Get()
+        [HttpGet(Name ="GetAll")]
+        public ActionResult<IEnumerable<Geo>> GetAll()
         {
-            //var index = Geo.Count();
-
-            //if ( index< LandNavn.Length)
-            //    Geo.Add(new Geo()
-            //    {
-            //        LandNavn = LandNavn[index]
-
-            //    });
-            return Geo;
+            return Ok(Geo);
         }
 
+        [HttpGet("{Id}",Name ="Get")]
+        public ActionResult<Geo> Get(int Id)
+        {
+            var geoObject = Geo.Where(e => e.Id == Id).FirstOrDefault();
+            if (geoObject != null)
+                return Ok(geoObject);
+            else
+                return NotFound("Id=" + Id);
+        }
+
+
         [HttpPost]
-        public IEnumerable<Geo> Post()
+        public ActionResult Post()
         {
             var index = Geo.Count();
+         
+
 
             if (index < LandNavn.Length)
-                Geo.Add(new Geo()
+            {
+                var newGeo =new Geo()
                 {
                     Id = Id++,
+                    Created = DateTime.Now,
                     LandNavn = LandNavn[index]
 
-                });
-            return Geo;
+                };
+                Geo.Add(newGeo);
+                
+               return CreatedAtRoute("Get",new {newGeo.Id}, newGeo);
+
+            } else
+            {
+                return NoContent();
+            }
         }
 
 
