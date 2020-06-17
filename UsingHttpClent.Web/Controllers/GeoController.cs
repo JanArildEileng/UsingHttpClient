@@ -40,12 +40,15 @@ namespace UsingHttpClent.Web.Controllers
         }
 
         [HttpGet(Name ="GetAll")]
+        [ProducesResponseType(200)]
         public ActionResult<IEnumerable<Geo>> GetAll()
         {
             return Ok(Geo);
         }
 
         [HttpGet("{Id}",Name ="Get")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<Geo> Get(int Id)
         {
             var geoObject = Geo.Where(e => e.Id == Id).FirstOrDefault();
@@ -57,6 +60,8 @@ namespace UsingHttpClent.Web.Controllers
 
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(204)]
         public ActionResult Post()
         {
             var index = Geo.Count();
