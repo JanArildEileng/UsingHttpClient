@@ -62,21 +62,14 @@ namespace UsingHttpClent.Web.Controllers
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(204)]
-        public ActionResult Post()
+        public ActionResult Post([FromBody] Geo newGeo)
         {
             var index = Geo.Count();
-         
-
 
             if (index < LandNavn.Length)
             {
-                var newGeo =new Geo()
-                {
-                    Id = Id++,
-                    Created = DateTime.Now,
-                    LandNavn = LandNavn[index]
-
-                };
+                newGeo.Id = Id++;
+                newGeo.Created = DateTime.Now;
                 Geo.Add(newGeo);
                 
                return CreatedAtRoute("Get",new {newGeo.Id}, newGeo);
@@ -86,6 +79,38 @@ namespace UsingHttpClent.Web.Controllers
                 return NoContent();
             }
         }
+
+
+        [HttpPost("Create")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(204)]
+        public ActionResult Create()
+        {
+            var index = Geo.Count();
+
+
+            if (index < LandNavn.Length)
+            {
+                var newGeo = new Geo()
+                {
+                    Id = Id++,
+                    Created = DateTime.Now,
+                    LandNavn = LandNavn[index]
+
+                };
+                Geo.Add(newGeo);
+
+                return CreatedAtRoute("Get", new { newGeo.Id }, newGeo);
+
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
+
+
 
 
 
